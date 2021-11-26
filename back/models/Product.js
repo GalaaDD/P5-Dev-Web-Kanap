@@ -1,3 +1,4 @@
+/**Object-Product-information-constant*/
 const products = [
   {
     "colors": ["Blue", "White", "Black"],
@@ -72,6 +73,8 @@ const products = [
     "altTxt": "Photo d'un canapé rose, trois places"
   }
 ];
+
+/**Promise to convert into JSON products informations and find an exact product*/
 
 exports.find = () => {
   return new Promise((resolve, reject) => resolve(JSON.parse(JSON.stringify(products))));
