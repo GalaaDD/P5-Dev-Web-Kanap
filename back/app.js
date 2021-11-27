@@ -21,19 +21,3 @@ app.use(express.json());
 app.use('/api/products', productRoutes);
 
 module.exports = app;
-
-
-/**reflexion
-
-*let url = 
-*'./product.html?id=42';
-
-*fetch(url).then((response) =>
-  response.json().then((data) => console.log(data))
-*);
-*let article-template = '<article>'
-*for(let product of data){
-  article-template += `<`
-*}
-*let article-template = ``
-*********

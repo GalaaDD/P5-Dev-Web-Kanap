@@ -1,5 +1,5 @@
 
-/**Get-API-Informations */
+/**Get-API-product-Informations */
 
 function getProducts() {
    return fetch("http://localhost:3000/api/products")
@@ -7,22 +7,21 @@ function getProducts() {
             return res.json();
         })
         .then(function (products) {
-            
             return products
           })
           
         .catch((error) => { 
             let items = document.querySelector(".items");
             items.innerHTML = 
-            "Une erreur est survenue, veuillez vérifier le port du serveur local <br> Si le problème est récurrent veuillez nous en informer."
-            /**items.style*/
+            "Une erreur est survenue, veuillez vérifier le port du serveur local <br> Si le problème persiste veuillez nous en informer."
+
         });
 
 }
 
 function renderProduct(product) {
     document.querySelector("#items").innerHTML +=
-    `       <a href="./product.html?${product._id}">
+    `       <a href="product.html?id=${product._id}">
                 <article>
                   <img src="${product.imageUrl}" alt="${product.altTxt}">
                   <h3 class="productName">${product.name}</h3>
