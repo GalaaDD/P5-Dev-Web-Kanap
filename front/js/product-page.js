@@ -2,7 +2,6 @@
 (async function() {
     const productId = getProductId()
     const product = await getProduct(productId)
-    console.log(productId)
     renderProduct(product)
 })()
 
@@ -27,6 +26,7 @@ function getProduct(productId) {
      
 }
 
+// Function to display the color's options of the products
 function renderProduct(product) {
     document.querySelector("#page-product").innerHTML +=
     `<title>${product.name}</title>`;
@@ -43,19 +43,5 @@ function renderProduct(product) {
     document.querySelector(".item__content__description").innerHTML +=
     `<p id="description">${product.description}</p>`;
 
-    document.querySelector("#colors").innerHTML +=
-    `<option value="">--SVP, choisissez une couleur--</option>
-    <option value="${product.colors}">${product.colors}</option>
-    <option value="${product.colors}">${product.colors}</option>`;
+    document.querySelector("#colors").insertAdjacentHTML("beforeend", product.colors.map((colors => `<option value="${colors}">${colors}</option>`)));
 }
-
-let productColors = product.colors;
-for (let color of productColors) {
-    color.setAttribute("option", color);
-    document.querySelector("#colors").innerHTML +=
-    `<option value="">--SVP, choisissez une couleur--</option>
-    <option value="${product.colors}">${product.colors}</option>
-    <option value="${product.colors}">${product.colors}</option>`;
-    
-    colorInOption.innerHTML = color;
-}  
