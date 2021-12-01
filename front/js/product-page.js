@@ -44,4 +44,54 @@ function renderProduct(product) {
     `<p id="description">${product.description}</p>`;
 
     document.querySelector("#colors").insertAdjacentHTML("beforeend", product.colors.map((colors => `<option value="${colors}">${colors}</option>`)));
+
+    //addEventListener-AddToCart
+    document.getElementById("addToCart").addEventListener("click", (event) => {
+        event.preventDefault();
+            //cutstomer's choice-Quantity /colors
+        const itemQuantityChoice = document.querySelector("#quantity").value;
+        const itemColorChoice =  document.querySelector("#colors").value;
+  
+        //Get cutstomer's choice-Quantity-informations'
+        let itemInformations = { 
+        itemName : product.name,
+        selectedItemId: product._id,
+        itemColor: itemColorChoice,
+        itemQuantity: itemQuantityChoice,
+        itemPrice: product.price,
+
+    
+       
+    } 
+    
+    const alertConfirmation = () =>{
+        if (window.confirm(`${product.name} ${itemColorChoice} a été ajouté au panier Voir le panier OK ou retourner à l'accueil ANNULER`)){
+            window.location.href = "cart.html";
+        }else{
+            window.location.href = "index.html";
+        }
+    }
+    console.log(itemInformations);
+
+
+/**local storage- part*/
+            
+        let productsSaveInLocalStorage = JSON.parse (localStorage.getItem('product'));
+        console.log(productsSaveInLocalStorage);
+        
+        // storage check
+        if(productsSaveInLocalStorage){
+            productsSaveInLocalStorage.push(itemInformations);
+            productsSaveInLocalStorage.push(itemInformations);
+            localStorage.setItem("product", JSON.stringify(productsSaveInLocalStorage));
+            alertConfirmation();
+        }else{
+            productsSaveInLocalStorage = [];
+            console.log(productssaveInLocalStorage);
+            productsSaveInLocalStorage.push(itemInformations);
+            localStorage.setItem("product", JSON.stringify(productsSaveInLocalStorage));
+            alertConfirmation();
+        }
+
+        })
 }
