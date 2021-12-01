@@ -59,13 +59,10 @@ function renderProduct(product) {
         itemColor: itemColorChoice,
         itemQuantity: itemQuantityChoice,
         itemPrice: product.price,
-
-    
-       
     } 
-    
+
     const alertConfirmation = () =>{
-        if (window.confirm(`${product.name} ${itemColorChoice} a été ajouté au panier Voir le panier OK ou retourner à l'accueil ANNULER`)){
+        if (window.confirm(`${product.name} ${itemColorChoice} a été ajouté au panier cliquez sur OK pour acceder panier ou sur ANNULER pour retourner à l'accueil`)){
             window.location.href = "cart.html";
         }else{
             window.location.href = "index.html";
@@ -78,18 +75,21 @@ function renderProduct(product) {
             
         let productsSaveInLocalStorage = JSON.parse (localStorage.getItem('product'));
         console.log(productsSaveInLocalStorage);
-        
+        //Function to add selected product to the local storage
+        const addSelectedProductToTheLocalStorage = () => {
+            //integration of the user values by adding object to the array
+            productsSaveInLocalStorage.push(itemInformations);
+
+            //transform and Send to the 'product'key of the local Storage, in the JSON language
+            localStorage.setItem("product", JSON.stringify(productsSaveInLocalStorage));
+        }
         // storage check
         if(productsSaveInLocalStorage){
-            productsSaveInLocalStorage.push(itemInformations);
-            productsSaveInLocalStorage.push(itemInformations);
-            localStorage.setItem("product", JSON.stringify(productsSaveInLocalStorage));
+            addSelectedProductToTheLocalStorage();
             alertConfirmation();
         }else{
             productsSaveInLocalStorage = [];
-            console.log(productssaveInLocalStorage);
-            productsSaveInLocalStorage.push(itemInformations);
-            localStorage.setItem("product", JSON.stringify(productsSaveInLocalStorage));
+            addSelectedProductToTheLocalStorage();
             alertConfirmation();
         }
 
