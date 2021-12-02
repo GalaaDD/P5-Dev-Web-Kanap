@@ -59,6 +59,7 @@ function renderProduct(product) {
         itemColor: itemColorChoice,
         itemQuantity: itemQuantityChoice,
         itemPrice: product.price,
+        itemImage: product.imageUrl,
     } 
 
     const alertConfirmation = () =>{
@@ -82,7 +83,7 @@ function renderProduct(product) {
 
             //transform and Send to the 'product'key of the local Storage, in the JSON language
             localStorage.setItem("product", JSON.stringify(productsSaveInLocalStorage));
-        }
+        } 
         // storage check
         if(productsSaveInLocalStorage){
             addSelectedProductToTheLocalStorage();
@@ -95,3 +96,4 @@ function renderProduct(product) {
 
         })
 }
+
