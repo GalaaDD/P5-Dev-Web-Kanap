@@ -51,7 +51,7 @@ function renderProduct(product) {
             //cutstomer's choice-Quantity /colors
         const itemQuantityChoice = document.querySelector("#quantity").value;
         const itemColorChoice =  document.querySelector("#colors").value;
-  
+     
         //Get cutstomer's choice-Quantity-informations'
         let itemInformations = { 
         itemName : product.name,
@@ -61,15 +61,17 @@ function renderProduct(product) {
         itemPrice: product.price,
         itemImage: product.imageUrl,
     } 
+}
 
-    const alertConfirmation = () =>{
-        if (window.confirm(`${product.name} ${itemColorChoice} a été ajouté au panier cliquez sur OK pour acceder panier ou sur ANNULER pour retourner à l'accueil`)){
-            window.location.href = "cart.html";
-        }else{
-            window.location.href = "index.html";
-        }
+function alertConfirmation () {
+    if (window.confirm(`${product.name} ${itemColorChoice} a été ajouté au panier cliquez sur OK pour acceder panier ou sur ANNULER pour retourner à l'accueil`)){
+        
+        window.location.href = "cart.html";
+    }else{
+        window.location.href = "index.html";
     }
-    console.log(itemInformations);
+}
+
 
 
 /**local storage- part*/
@@ -79,7 +81,12 @@ function renderProduct(product) {
         //Function to add selected product to the local storage
         const addSelectedProductToTheLocalStorage = () => {
             //integration of the user values by adding object to the array
-            productsSaveInLocalStorage.push(itemInformations);
+            const productIndex = productsSaveInLocalStorage.findIndex(p => p.selectedItemId === itemInformations.selectedItemId && p.itemColor === itemInformations.itemColor);
+            if (productIndex !== -1  )  {
+                productsSaveInLocalStorage[productIndex].itemQuantity++;
+            } else  productsSaveInLocalStorage.push(itemInformations);
+
+           
 
             //transform and Send to the 'product'key of the local Storage, in the JSON language
             localStorage.setItem("product", JSON.stringify(productsSaveInLocalStorage));
@@ -95,5 +102,5 @@ function renderProduct(product) {
         }
 
         })
-}
+
 

@@ -1,6 +1,7 @@
 
 
 const cartProducts = document.querySelector("#cart__items");
+console.log(cartProducts);
 let productsSaveInLocalStorage = JSON.parse (localStorage.getItem('product'));
 //If the cart is empty : Display empty cart
 
@@ -15,9 +16,9 @@ const emptyCart = `
     //If the cart is not empty: Display Products
     let cartStructure = [];
     
-    for(i = 0; i < productsSaveInLocalStorage.length; i++){ 
-        console.log(productsSaveInLocalStorage);
-       cartStructure = cartStructure + `
+    for(i = 0; i < productsSaveInLocalStorage.length; i++){
+        console.log(productsSaveInLocalStorage.length,i);
+        cartProducts.innerHTML +=`
         <article class="cart__item" data-id="${productsSaveInLocalStorage[i].selectedItemId}" data-color="${productsSaveInLocalStorage[i].itemColor}">
             <div class="cart__item__img">
                 <img src="${productsSaveInLocalStorage[i].itemImage}" alt="${productsSaveInLocalStorage[i].altTxt}">
@@ -31,7 +32,7 @@ const emptyCart = `
                 <div class="cart__item__content__settings">
                     <div class="cart__item__content__settings__quantity">
                         <p>Qté : ${productsSaveInLocalStorage[i].itemQuantity}</p>
-                        <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${productsSaveInLocalStorage[i].itemprice}">
+                        <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${productsSaveInLocalStorage[i].itemPrice}">
                     </div>
                     <div class="cart__item__content__settings__delete">
                         <p class="deleteItem">Supprimer</p>
@@ -40,11 +41,20 @@ const emptyCart = `
             </div>
         </article>
         `;
+        const deleteButton = document.querySelectorAll(".deleteItem")[i];
+        console.log(deleteButton);
     }
-        if(i == productsSaveInLocalStorage.length){
+        /**if(i == productsSaveInLocalStorage.length){
                 cartProducts.innerHTML = cartStructure;
                             // HTML Integration
-        }
+        }*/
    
                 
 }
+
+//**delete-- button */
+
+
+
+//
+
