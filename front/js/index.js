@@ -7,16 +7,14 @@ function getProducts() {
             return res.json();
         })
         .then(function (products) {
-            return products
+            return products;
           })
           
         .catch((error) => { 
             let items = document.querySelector(".items");
             items.innerHTML = 
-            "Une erreur est survenue, veuillez vérifier le port du serveur local <br> Si le problème persiste veuillez nous en informer."
-
+            "Une erreur est survenue, veuillez vérifier le port du serveur local <br> Si le problème persiste veuillez nous en informer.";
         });
-
 }
 
 function renderProduct(product) {
@@ -33,7 +31,7 @@ function renderProduct(product) {
 
 async function displayProducts() {
     const products = await getProducts();
-    console.log(products)
+    console.log(products);
     if (products && products.length) {
         for(const product of products){
             renderProduct(product);
@@ -43,8 +41,6 @@ async function displayProducts() {
 }
 
 displayProducts();
-
-
 
 
 

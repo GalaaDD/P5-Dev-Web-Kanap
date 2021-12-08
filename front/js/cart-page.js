@@ -1,60 +1,73 @@
-
-
-const cartProducts = document.querySelector("#cart__items");
-console.log(cartProducts);
 let productsSaveInLocalStorage = JSON.parse (localStorage.getItem('product'));
-//If the cart is empty : Display empty cart
+const cartProducts = document.querySelector("#cart__items");
 
-if(productsSaveInLocalStorage === null){
-const emptyCart = `
+
+
+function renderProductFull(product) {
+    cartProducts.innerHTML +=`
+    <article class="cart__item" data-id="${productsSaveInLocalStorage.selectedItemId}" data-color="${.itemColors}">
+        <div class="cart__item__img">
+            <img src="${product.imageUrl}" alt="${product.altTxt}">
+        </div>
+        <div class="cart__item__content">
+            <div class="cart__item__content__description">
+                <h2>${product.name}</h2>
+                <p>${product.colors}</p>
+                <p>${product.price} €</p>
+            </div>
+            <div class="cart__item__content__settings">
+                <div class="cart__item__content__settings__quantity">
+                    <p>Qté :</p>
+                    <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${product.itemQuantity}">
+                </div>
+                <div class="cart__item__content__settings__delete">
+                    <p class="deleteItem">Supprimer</p>
+                </div>
+            </div>
+        </div>
+    </article>
+    `;   
+}
+
+/** fonction à réadapter pour cart-page 
+ * async function displayProducts() {
+    const products = await getProducts();
+    console.log(products);
+    if (products && products.length) {
+        for(const product of products){
+            renderProductFull(product);
+        }
+    }
+}
+*/
+
+
+function renderProductEmpty() {
+    cartProducts.innerHTML += 
+    `
     <div class="empty-Cart">
     <div>Le panier est vide</div>
     </div>
     `;
-    cartProducts.innerHTML = emptyCart;
-}else{
-    //If the cart is not empty: Display Products
-    let cartStructure = [];
-    
+}
+
+/*function renderCartProducts(){*/
+    //If the cart is empty : Display empty cart
+    if(productsSaveInLocalStorage === null){
+        renderProductEmpty();
+    }else{
+        //If the cart is not empty: Display Products
+        renderProductFull();
+    }
+ 
+
+function editProductInformations() {
     for(i = 0; i < productsSaveInLocalStorage.length; i++){
-        console.log(productsSaveInLocalStorage.length,i);
-        cartProducts.innerHTML +=`
-        <article class="cart__item" data-id="${productsSaveInLocalStorage[i].selectedItemId}" data-color="${productsSaveInLocalStorage[i].itemColor}">
-            <div class="cart__item__img">
-                <img src="${productsSaveInLocalStorage[i].itemImage}" alt="${productsSaveInLocalStorage[i].altTxt}">
-            </div>
-            <div class="cart__item__content">
-                <div class="cart__item__content__description">
-                    <h2>${productsSaveInLocalStorage[i].itemName}</h2>
-                    <p>${productsSaveInLocalStorage[i].itemColor}</p>
-                    <p>${productsSaveInLocalStorage[i].itemPrice} €</p>
-                </div>
-                <div class="cart__item__content__settings">
-                    <div class="cart__item__content__settings__quantity">
-                        <p>Qté : ${productsSaveInLocalStorage[i].itemQuantity}</p>
-                        <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${productsSaveInLocalStorage[i].itemPrice}">
-                    </div>
-                    <div class="cart__item__content__settings__delete">
-                        <p class="deleteItem">Supprimer</p>
-                    </div>
-                </div>
-            </div>
-        </article>
-        `;
+        console.log(productsSaveInLocalStorage.length, i);
+        renderProductFull();
         const deleteButton = document.querySelectorAll(".deleteItem")[i];
         console.log(deleteButton);
     }
-        /**if(i == productsSaveInLocalStorage.length){
-                cartProducts.innerHTML = cartStructure;
-                            // HTML Integration
-        }*/
-   
-                
-}
+};
 
-//**delete-- button */
-
-
-
-//
 
