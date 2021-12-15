@@ -56,28 +56,26 @@ function getItemInformations(product){
     };
 }    
 
-
 //Function to add selected product to the local storage
-
 function alertConfirmation(item) {
     
-    if ( window.confirm(`${ item.itemName} ${item.itemColor} a été ajouté au panier cliquez sur OK pour acceder panier ou sur ANNULER pour retourner à l'accueil`)){
+    if ( window.confirm(`${ item.itemName} ${item.itemColor} a été ajouté au panier cliquez sur OK pour acceder au panier ou sur ANNULER pour retourner à l'accueil`)){
         checkStorage(item);
         window.location.href = "cart.html";
-    }
-    else{
+    }else{
         window.location.href = "index.html";
     }
 }
 
 // storage check
 function checkStorage(itemInformations){
-    productsSaveInLocalStorage = JSON.parse (localStorage.getItem('product')) || []; 
+    let productsSaveInLocalStorage = JSON.parse (localStorage.getItem('product')) || []; 
     console.log(productsSaveInLocalStorage);
     const productIndex = productsSaveInLocalStorage.findIndex(p => p.selectedItemId === itemInformations.selectedItemId && p.itemColor === itemInformations.itemColor);
     if (productIndex !== -1) {
         productsSaveInLocalStorage[productIndex].itemQuantity++;
-    } else {
+        localStorage.setItem("product", JSON.stringify(productsSaveInLocalStorage));
+    }else {
         productsSaveInLocalStorage.push(itemInformations);
         localStorage.setItem("product", JSON.stringify(productsSaveInLocalStorage));
     } 
@@ -93,66 +91,3 @@ function addToCartBtn(){
 }
 
 addToCartBtn();
-
-//addEventListener-AddToCart
-
-
-/**local storage- part*/
-/** 
- * productsSaveInLocalStorage.push(itemInformations);
-    //transform and Send to the 'product'key of the local Storage, in the JSON language
-    localStorage.setItem("product", JSON.stringify(productsSaveInLocalStorage));
-
-//Function to add selected product to the local storage
-function addSelectedProductToTheLocalStorage() {
-    let productsSaveInLocalStorage = JSON.parse (localStorage.getItem('product'));
-    const productId = getProductId();
-    const product = getProduct(productId);
-    /**Get cutstomer's choice-Quantity-informations'
-    const itemInformations = { 
-        itemName : product.name,
-        selectedItemId: product._id,
-        itemColor: itemColorChoice,
-        itemQuantity: itemQuantityChoice,
-        itemPrice: product.price,
-        itemImage: product.imageUrl,
-        itemImageDescription: product.altTxt,
-    };
-    
-    const productIndex = productsSaveInLocalStorage.findIndex(p => p.selectedItemId === itemInformations.selectedItemId && p.itemColor === itemInformations.itemColor);
-
-    if (productIndex !== -1) {
-        productsSaveInLocalStorage[productIndex].itemQuantity++;
-    }
-
-    else {
-        productsSaveInLocalStorage.push(itemInformations);
-        //transform and Send to the 'product'key of the local Storage, in the JSON language
-        localStorage.setItem("product", JSON.stringify(productsSaveInLocalStorage));
-    }
-        // storage check
-    if (productsSaveInLocalStorage) {
-        alertConfirmation();
-        productsSaveInLocalStorage.push(itemInformations);
-            productsSaveInLocalStorage.push(itemInformations);
-            localStorage.setItem("product", JSON.stringify(productsSaveInLocalStorage));
-    }
-       //integration of the user values by adding object to the array
-    else {
-        productsSaveInLocalStorage = [];
-        alertConfirmation();
-    }
-
-}
-
- //addEventListener-AddToCart
-function addToCartBtn(){
-    document.getElementById("addToCart").addEventListener("click", (event) => {
-    event.preventDefault();
-    addSelectedProductToTheLocalStorage();
-    });
-}
-
-addToCartBtn();
-addSelectedProductToTheLocalStorage();
-*/
