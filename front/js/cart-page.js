@@ -12,7 +12,7 @@ function renderProductEmpty(cartProducts) {
 
 /*Function to render the product on the cart page*/
 function renderProductFull(productsSaveInLocalStorage) {
-    for(i = 0; i < productsSaveInLocalStorage.length; i++){ 
+    for(let i = 0; i < productsSaveInLocalStorage.length; i++){ 
         cartProducts.innerHTML +=
         `
         <article class="cart__item" data-id="${productsSaveInLocalStorage[i].selectedItemId}" data-color="${productsSaveInLocalStorage[i].itemColor}">
@@ -23,7 +23,7 @@ function renderProductFull(productsSaveInLocalStorage) {
                 <div class="cart__item__content__description">
                     <h2>${productsSaveInLocalStorage[i].itemName}</h2>
                     <p>${productsSaveInLocalStorage[i].itemColor}</p>
-                    <p>${productsSaveInLocalStorage[i].itemPrice} €</p>
+                    <p class="cart-price">${productsSaveInLocalStorage[i].itemPrice} €</p>
                 </div>
                 <div class="cart__item__content__settings">
                     <div class="cart__item__content__settings__quantity">
@@ -37,13 +37,11 @@ function renderProductFull(productsSaveInLocalStorage) {
             </div>
         </article>
         `;
-        document.querySelector('.cart__price').innerHTML +=
-        `  <p>Total (<span id="totalQuantity"><!-- 2--></span> articles) : <span id="totalPrice"><!--  0 --></span> €</p>
-        `;
     }
+
+   
 }
 /*******/ 
-
 
 /****/
 function renderCarts(productsSaveInLocalStorage){
@@ -59,50 +57,82 @@ function renderCarts(productsSaveInLocalStorage){
 renderCarts(productsSaveInLocalStorage);
 
 // Remove products from cart
-const removeBtn = document.getElementsByClassName('deleteItem');
-for (var k = 0; k < removeBtn.length; k++) {
-  button = removeBtn[k]
-  button.addEventListener('click', removeItem)
+
+function deleteProduct(){
+    const removeBtn = document.getElementsByClassName('deleteItem');
+    for (let k = 0; k < removeBtn.length; k++) {
+    let button = removeBtn[k];
+    button.addEventListener('click', removeItem);
+    }
+}
+function removeItem (event) {
+  let btnClicked = event.target;
+  btnClicked.parentElement.parentElement.parentElement.parentElement.remove();
+  localStorage.removeItem("product");
 }
 
-function removeItem (event) {
-  btnClicked = event.target
-  btnClicked.parentElement.parentElement.parentElement.parentElement.remove()
-  updateCartPrice()
-}
-  // update total price
-  function updateCartPrice() {
-    const productRow = document.querySelector('.cart__items');
-    var total = 0
-    for (var j = 0; j < productRow.length; j += 2) {
-     let cartRow = productRow[j]
-        var priceElement = cartRow.getElementsByClassName('cart-price')[0]
-        var quantityElement = cartRow.getElementsByClassName('product-quantity')[0]
-        var price = parseFloat(priceElement.innerText.replace('€', ''))
-        var quantity = quantityElement.value
-        total = total + (price * quantity )
-      
+deleteProduct();
+
+// purchase items
+
+  
+function purchaseBtnClicked () {
+    const purchaseBtn = document.querySelector('#order');
+    purchaseBtn.addEventListener('click', purchaseBtnClicked);
+    let cartItems = document.getElementsByClassName('cart__items')[0];
+    while (cartItems.hasChildNodes()) {
+        cartItems.removeChild(cartItems.firstChild);
+       
     }
-    document.getElementsByClassName('total-price')[0].innerText = total
-  
-  document.getElementsByClassName('totalQuantity')[0].textContent = i /= 2
-  }
-  // end of update total price
-  
-  // purchase items
-  const purchaseBtn = document.querySelector('#order');
-  
-  const closeCartModal = document.querySelector('.cart-modal');
-  
-  purchaseBtn.addEventListener('click', purchaseBtnClicked)
-  
-  function purchaseBtnClicked () {
-    alert ('Merci pour votre commande');
-   var cartItems = document.getElementsByClassName('cart__items')[0]
-   while (cartItems.hasChildNodes()) {
-     cartItems.removeChild(cartItems.firstChild)
-     
-   }
-    updateCartPrice()
-  }
-  // end of purchase items*/
+}
+
+// end of purchase items*/
+
+// total Price
+function getTotalPrice(){
+    let calculateTotalPrice = [];
+    //Getting cart's informations
+    for (let l = 0; l < productsSaveInLocalStorage.length; l++){
+        let cartProductPrice =productsSaveInLocalStorage[l].itemPrice;
+        //adding cart's prices into the variable  
+        calculateTotalPrice.push(cartProductPrice);
+        console.log(calculateTotalPrice);
+    }
+        //adding prices from the array to the reduce method
+    const reducerPrice = (accumulator, currentValue)=> accumulator + currentValue;
+    const totalPrice = calculateTotalPrice.reduce(reducerPrice, 0);
+    console.log(totalPrice);
+}
+const totalPrice = getTotalPrice();
+
+//Total Quantity
+/*function getTotalQuantity(){*/
+    let calculateTotalQuantity = [];
+
+    //Getting cart's informations
+    for (let m = 0; m < productsSaveInLocalStorage.length; m++){
+        let cartProductQuantity =productsSaveInLocalStorage[m].itemQuantity;
+        //adding cart's prices into the variable  
+        calculateTotalQuantity.push(cartProductQuantity);
+
+        console.log(calculateTotalQuantity);
+    }
+
+    //adding prices from the array to the reduce method
+    const reducerQuantity = (accumulator, currentValue)=> accumulator + currentValue;
+    const totalQuantity = calculateTotalQuantity.reduce(reducerQuantity, 0);
+    
+    console.log(totalQuantity.length-1);
+    /*return totalQuantity;
+}*/
+//integration in HTML
+
+
+ const quantityValue = totalQuantity.length-=1;
+function renderTotalCart(){
+   
+    document.querySelector('.cart__price').innerHTML +=
+    `  <p>Total (<span id="totalQuantity">${quantityValue}</span> articles) : <span id="totalPrice"><!-- ${totalPrice} --></span> €</p>
+    `;
+}
+renderTotalCart();
