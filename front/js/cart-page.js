@@ -38,15 +38,14 @@ function renderProductFull(productsSaveInLocalStorage) {
         </article>
         `;
     }
-
-   
 }
 /*******/ 
 
 /****/
 function renderCarts(productsSaveInLocalStorage){
+    console.log(productsSaveInLocalStorage);
     //If the cart is empty : Display empty cart
-    if(productsSaveInLocalStorage === null){
+    if(productsSaveInLocalStorage.length === 0){
         renderProductEmpty(cartProducts);
     }else{
         //If the cart is not empty: Display Products
@@ -65,17 +64,18 @@ function deleteProduct(){
     button.addEventListener('click', removeItem);
     }
 }
+
 function removeItem (event) {
   let btnClicked = event.target;
   btnClicked.parentElement.parentElement.parentElement.parentElement.remove();
   localStorage.removeItem("product");
+  // function to delete the element from the local storage
 }
 
 deleteProduct();
 
 // purchase items
 
-  
 function purchaseBtnClicked () {
     const purchaseBtn = document.querySelector('#order');
     purchaseBtn.addEventListener('click', purchaseBtnClicked);
@@ -90,49 +90,71 @@ function purchaseBtnClicked () {
 
 // total Price
 function getTotalPrice(){
-    let calculateTotalPrice = [];
     //Getting cart's informations
-    for (let l = 0; l < productsSaveInLocalStorage.length; l++){
-        let cartProductPrice =productsSaveInLocalStorage[l].itemPrice;
-        //adding cart's prices into the variable  
-        calculateTotalPrice.push(cartProductPrice);
-        console.log(calculateTotalPrice);
-    }
-        //adding prices from the array to the reduce method
+    let calculateTotalPrice = productsSaveInLocalStorage.map(p=>p.itemPrice*p.itemQuantity) || [0];
+   
+    //adding prices from the array to the reduce method
     const reducerPrice = (accumulator, currentValue)=> accumulator + currentValue;
-    const totalPrice = calculateTotalPrice.reduce(reducerPrice, 0);
-    console.log(totalPrice);
+    const totalPrice = calculateTotalPrice.reduce(reducerPrice);
+    return totalPrice;
 }
-const totalPrice = getTotalPrice();
+
 
 //Total Quantity
-/*function getTotalQuantity(){*/
-    let calculateTotalQuantity = [];
-
+function getTotalQuantity(){
     //Getting cart's informations
-    for (let m = 0; m < productsSaveInLocalStorage.length; m++){
-        let cartProductQuantity =productsSaveInLocalStorage[m].itemQuantity;
-        //adding cart's prices into the variable  
-        calculateTotalQuantity.push(cartProductQuantity);
-
-        console.log(calculateTotalQuantity);
-    }
+    let calculateTotalQuantity = productsSaveInLocalStorage.map(p=>p.itemQuantity) || [0];
 
     //adding prices from the array to the reduce method
     const reducerQuantity = (accumulator, currentValue)=> accumulator + currentValue;
-    const totalQuantity = calculateTotalQuantity.reduce(reducerQuantity, 0);
-    
-    console.log(totalQuantity.length-1);
-    /*return totalQuantity;
-}*/
+    const totalQuantity = calculateTotalQuantity.reduce(reducerQuantity);
+    return totalQuantity;
+}
 //integration in HTML
 
 
- const quantityValue = totalQuantity.length-=1;
 function renderTotalCart(){
-   
+    const totalPrice = getTotalPrice();
+    const quantityValue = getTotalQuantity();
     document.querySelector('.cart__price').innerHTML +=
-    `  <p>Total (<span id="totalQuantity">${quantityValue}</span> articles) : <span id="totalPrice"><!-- ${totalPrice} --></span> €</p>
+    `  <p>Total (<span id="totalQuantity">${quantityValue}</span> articles) : <span id="totalPrice">${totalPrice || 0}</span> €</p>
     `;
 }
 renderTotalCart();
+
+// Select Product Id into an array to use the splice method
+/*
+let getCartProductsId = [];
+for (let n = 0; n < productsSaveInLocalStorage.length; n++){
+    let cartProductsId =productsSaveInLocalStorage[n].selectedItemId;
+    //adding cart's prices into the variable  
+    getCartProductsId.push(cartProductsId);
+
+    console.log(getCartProductsId);
+}
+*/
+
+const inputChanges = document.querySelector('.itemQuantity');
+/*getData(event) {
+    console.log(+JSON.stringify(event.target.dataset));
+    console.log(+JSON.stringify(event.target.dataset.id));
+}
+
+inputChanges.addEventListener('change', function(){
+   console.log("CHANGE");
+  
+});*/
+
+
+// use the splice method on it here
+/*
+const removeCartItem = (arr, item) => {
+    let newArray = [...arr];
+    const index = newArray.findIndex((element) => element === item);
+    if (index !== -1) {
+        newArray.splice(index, 1);
+        return newArray;
+    }
+    console.log(removeCartItem(getCartProductsId, '107fb5b75607497b96722bda5b504926'));
+    console.log(getCartProductsId);
+}*/
