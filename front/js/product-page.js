@@ -24,7 +24,6 @@ function getProduct(productId) {
         });  
 }
 
-// Function to display the color's options of the products
 function renderProduct(product) {
     document.querySelector("#page-product").innerHTML +=
         `<title>${product.name}</title>`;
@@ -42,7 +41,7 @@ function renderProduct(product) {
 //Get cutstomer's choice-Quantity-informations'
 function getItemInformations(product){
     /**cutstomer's choice-Quantity /colors*/
-    const itemQuantityChoice = document.querySelector("#quantity").value;
+    const itemQuantityChoice = document.querySelector("#quantity").valueAsNumber;
     const itemColorChoice =  document.querySelector("#colors").value;
     
     return { 

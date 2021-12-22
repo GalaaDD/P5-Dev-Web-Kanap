@@ -26,7 +26,7 @@ function renderProduct(product) {
                   <p class="productDescription">${product.description}</p>
                 </article>
             </a>
-         `;     
+         `;
 }
 
 async function displayProducts() {
