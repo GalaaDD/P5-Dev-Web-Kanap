@@ -7,8 +7,8 @@ function renderOrderNumber() {
 }*/
 
 function renderOrderNumber(){
-  const OrderNumberid = document.getElementById("orderId");
-  OrderNumberid.innerText = localStorage.getItem("orderId");
+  const OrderNumberId = document.getElementById("orderId");
+  OrderNumberId.innerText = localStorage.getItem("orderId");
   console.log(localStorage.getItem("orderId"))
   localStorage.clear();
 }

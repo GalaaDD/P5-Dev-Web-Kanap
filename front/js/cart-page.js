@@ -56,8 +56,8 @@ renderCarts(productsSaveInLocalStorage);
 
 function deleteProduct(){
     const removeBtn = document.getElementsByClassName('deleteItem');
-    for (let k = 0; k < removeBtn.length; k++) {
-    let button = removeBtn[k];
+    for (let i = 0; i < removeBtn.length; i++) {
+    let button = removeBtn[i];
     button.addEventListener('click', removeItem);
     }
 }
@@ -80,12 +80,10 @@ function getTotalPrice(){
     const totalPrice = calculateTotalPrice.reduce(reducerPrice);
     return totalPrice;
 }
-console.log(getTotalPrice());
 //Total Quantity
 function getTotalQuantity(){
     //Getting cart's informations
     let calculateTotalQuantity = productsSaveInLocalStorage.map(p=>p.itemQuantity)|| [0];
-    console.log(productsSaveInLocalStorage.map(p=>p.itemQuantity));
     //Adding prices from the array to the reduce method
     const reducerQuantity = (accumulator, currentValue)=> accumulator + currentValue;
     const totalQuantity = calculateTotalQuantity.reduce(reducerQuantity);
@@ -101,17 +99,18 @@ function renderTotalCart(){
     `  <p>Total (<span id="totalQuantity">${quantityValue}</span> articles) : <span id="totalPrice">${totalPrice || 0}</span> €</p>
     `;
 }
+
 renderTotalCart();
 
 // Delete a product
 function deleteProduct() {
     let deleteBtn = document.querySelectorAll(".deleteItem");
-    for (let n = 0; n < deleteBtn.length; n++){
-        deleteBtn[n].addEventListener("click" , (event) => {
+    for (let i = 0; i < deleteBtn.length; i++){
+        deleteBtn[i].addEventListener("click" , (event) => {
             event.preventDefault();
             //Select the element to delete, (id, color)
-            let deleteId = productsSaveInLocalStorage[n].selectedItemId;
-            let deleteColor = productsSaveInLocalStorage[n].itemColor;
+            let deleteId = productsSaveInLocalStorage[i].selectedItemId;
+            let deleteColor = productsSaveInLocalStorage[i].itemColor;
             productsSaveInLocalStorage = productsSaveInLocalStorage.filter( el => el.selectedItemId !== deleteId || el.itemColor !== deleteColor );
             localStorage.setItem("product", JSON.stringify(productsSaveInLocalStorage));
             //Alert deleted product
@@ -124,31 +123,75 @@ function deleteProduct() {
 deleteProduct();
 
 // Products Quantity Changes
-function changeQuantity() {
-    let quantityChanges = document.querySelectorAll(".itemQuantity");
-    for (let m = 0; m < quantityChanges.length; m++){
-        quantityChanges[m].addEventListener("change" , (event) => {
-            event.preventDefault();
+function changeValue (quantityContainer, productId, productColor){
+    const quantityContainerValue = quantityContainer.value;
+    console.log(quantityContainer, productId, productColor);
+    quantityContainer.addEventListener("change", e => {
+        e.preventDefault();
+        /************************************** */
 
-            //Select the element to change
-            let quantityToChange = productsSaveInLocalStorage[m].itemQuantity;
-            let quantityChangeValue = quantityChanges[m].valueAsNumber;
-            const finalQuantity = productsSaveInLocalStorage.find((el) => el.quantityChangeValue !== quantityToChange);
-            finalQuantity.itemQuantity = quantityChangeValue;
-            productsSaveInLocalStorage[m].itemQuantity = finalQuantity.itemQuantity;
+        let productsSaveInLocalStorage = JSON.parse (localStorage.getItem('product')) || []; 
+       
+        const productIndex = productsSaveInLocalStorage.find(p => p.selectedItemId === productId && p.itemColor === productColor);
+        
+        if (productIndex ==!-1) {
+            productsSaveInLocalStorage[productIndex] = quantityContainer.valueAsNumber;
 
             localStorage.setItem("product", JSON.stringify(productsSaveInLocalStorage));
+
+        } else{
+            
+            localStorage.setItem("product", JSON.stringify(productsSaveInLocalStorage));
+        }
+
+        /*location.reload();*/
+        /*
+        1localstorage(recuprer)
+        2find le produit avec le productId et color 
+        3incrementer
+        4mettre la quantité dans l'élément (container.value)
+        location.reload();*/
+    });
+}
+
+
+function initListeners() {
+    const cartItems = document.querySelectorAll(".cart__item");
+    for (let i = 0; i < cartItems.length; i++){
+        const productId = cartItems[i].dataset.id;
+        const productColor = cartItems[i].dataset.color;
+        const quantityContainer = cartItems[i].querySelector(".itemQuantity");
+        console.log(quantityContainer);
+        /*changeValue(quantityContainer, productId, productColor);*/
         
-            location.reload();
+        quantityContainer.addEventListener("change", e => {
+            e.preventDefault();
+            /************************************** */
+            let productsSaveInLocalStorage = JSON.parse (localStorage.getItem('product')) || []; 
+           
+            const productIndex = productsSaveInLocalStorage.findIndex(p => p.selectedItemId === productId && p.itemColor === productColor);
+            alert(productId);
+            alert(quantityContainer.valueAsNumber);
+            if (productIndex !==-1) {
+                if (quantityContainer.valueAsNumber === 0) {
+                     productsSaveInLocalStorage.splice(productIndex, 1);
+                    localStorage.setItem("product", JSON.stringify(productsSaveInLocalStorage));
+                    location.reload();
+                }
+                else{
+                    productsSaveInLocalStorage[productIndex].itemQuantity = quantityContainer.valueAsNumber;
+                    localStorage.setItem("product", JSON.stringify(productsSaveInLocalStorage));
+                }
+            }
+    
+            
+            /*location.reload();*/
         });
     }
 
-    if (quantityChanges.length <= 0){
-        deleteProduct();
-    }
 }
 
-changeQuantity();
+initListeners();
 
 // regex form function
 function getGuestForm() {
@@ -161,10 +204,12 @@ function getGuestForm() {
  // addEventListeners surrounding validation functions (firstname, lastname, address, city, email)
     form.firstName.addEventListener('change', function() {
         validFirstName(this);
+
     });
    
     form.lastName.addEventListener('change', function() {
         validLastName(this);
+
     });
 
     form.address.addEventListener('change', function() {
@@ -185,8 +230,10 @@ function getGuestForm() {
 
         if (charRegExp.test(inputFirstName.value)) {
             firstNameErrorMessage.innerHTML = '';
+            return /*true*/;
         } else {
             firstNameErrorMessage.innerHTML = 'Veuillez renseigner votre prénom.';
+        return /*false*/;
         }
     };
 
@@ -195,8 +242,10 @@ function getGuestForm() {
 
         if (charRegExp.test(inputLastName.value)) {
             lastNameErrorMessage.innerHTML = '';
+            return /*true*/;
         } else {
             lastNameErrorMessage.innerHTML = 'Veuillez renseigner votre nom de famille.';
+        return /*false*/;
         }
     };
 
@@ -205,8 +254,10 @@ function getGuestForm() {
 
         if (addressRegExp.test(inputAddress.value)) {
             addressErrorMessage.innerHTML = '';
+            return /*true*/; 
         } else {
             addressErrorMessage.innerHTML = 'Veuillez renseigner votre adresse postale.';
+        return /*false*/;
         }
     };
 
@@ -215,8 +266,10 @@ function getGuestForm() {
 
         if (charRegExp.test(inputCity.value)) {
             cityErrorMessage.innerHTML = '';
+            return /*true*/;
         } else {
             cityErrorMessage.innerHTML = 'Veuillez renseigner le nom de la ville.';
+        return /*false*/;
         }
     };
 
@@ -225,19 +278,19 @@ function getGuestForm() {
 
         if (emailRegExp.test(inputEmail.value)) {
             emailErrorMessage.innerHTML = '';
+            return /*true*/;
         } else {
             emailErrorMessage.innerHTML = 'Veuillez renseigner votre adresse email.';
+        return /*false*/;
         }
     };
 }
-
 getGuestForm();
-
 //Function to Send Guests'information to the localstorage
 function postFormToTheLocalStorage(){
     const orderBtn = document.getElementById("order");
     //cart Listener 
-    orderBtn.addEventListener("click", (event)=>{
+    orderBtn.addEventListener("click", (event) => {
     
         //Getting Guest informations
         let inputName = document.getElementById('firstName');
@@ -246,10 +299,11 @@ function postFormToTheLocalStorage(){
         let inputCity = document.getElementById('city');
         let inputMail = document.getElementById('email');
 
-        let idProducts = [];
+        let selectedItemsId = [];
         for (let i = 0; i < productsSaveInLocalStorage.length;i++) {
-            idProducts.push(productsSaveInLocalStorage[i].selectedItemId);
+            selectedItemsId.push(productsSaveInLocalStorage[i].selectedItemId);
         }
+
         const orderSummary = { contact : {
             firstName: inputName.value,
             lastName: inputLastName.value,
@@ -257,9 +311,8 @@ function postFormToTheLocalStorage(){
             city: inputCity.value,
             email: inputMail.value,
             },
-            products: idProducts,
-        }
-        
+            products: selectedItemsId,
+        };
 
         const postOrder = {
             method: 'POST',
@@ -279,12 +332,13 @@ function postFormToTheLocalStorage(){
             
         })
 
-        console.log(data.orderId);
-
-        /*.catch((err) => {
+        .catch((err) => {
             alert ("Un problème est survenu: " + err.message);
-        });*/
-   })
+        });
+    });   
 }
 
 postFormToTheLocalStorage();
+/*if (validFirstName(inputFirstName) && validLastName() && validAddress() && validCity() && validEmail() === true){
+postFormToTheLocalStorage();
+}*/
