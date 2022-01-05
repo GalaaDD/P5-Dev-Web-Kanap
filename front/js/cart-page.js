@@ -52,24 +52,6 @@ function renderCarts(productsSaveInLocalStorage){
 
 renderCarts(productsSaveInLocalStorage);
 
-// Remove products from cart
-
-function deleteProduct(){
-    const removeBtn = document.getElementsByClassName('deleteItem');
-    for (let i = 0; i < removeBtn.length; i++) {
-    let button = removeBtn[i];
-    button.addEventListener('click', removeItem);
-    }
-}
- // function to delete the element from the local storage
-function removeItem (event) {
-  let btnClicked = event.target;
-  btnClicked.parentElement.parentElement.parentElement.parentElement.remove();
-  localStorage.removeItem("product");
-}
-
-deleteProduct();
-
 // Total Price
 function getTotalPrice(){
     //Getting cart's informations
@@ -103,8 +85,10 @@ function renderTotalCart(){
 renderTotalCart();
 
 // Delete a product
-function deleteProduct() {
+/*function deleteProducthold() {
+    // selection of the input containers' class
     let deleteBtn = document.querySelectorAll(".deleteItem");
+    
     for (let i = 0; i < deleteBtn.length; i++){
         deleteBtn[i].addEventListener("click" , (event) => {
             event.preventDefault();
@@ -119,38 +103,62 @@ function deleteProduct() {
         });
     }
 }
+deleteProducthold()
+*/
+/************************************** */ /************************************** */ /************************************** */ /************************************** */
 
-deleteProduct();
+function deleteProduct(deleteContainers, deleteId, deleteColor) {
+    deleteContainers.addEventListener("click", e => {
+        e.preventDefault();
+    
+        let productsSaveInLocalStorage = JSON.parse (localStorage.getItem('product')) || []; 
+        const productIndex = productsSaveInLocalStorage.findIndex( p => p.selectedItemId === deleteId && p.itemColor === deleteColor); 
+
+        if (productIndex !==-1) {
+            productsSaveInLocalStorage.splice(productIndex, 1);
+            localStorage.setItem("product", JSON.stringify(productsSaveInLocalStorage));
+            location.reload();
+        }else{
+            localStorage.setItem("product", JSON.stringify(productsSaveInLocalStorage));
+        }
+    });
+}
+
+function initListenersDeleteBtn() {
+    const deleteContainers = document.querySelectorAll(".deleteItem");
+  
+    for (let i = 0; i < deleteContainers.length; i++){
+        const deleteId = productsSaveInLocalStorage[i].selectedItemId;
+        const deleteColor = productsSaveInLocalStorage[i].itemColor;
+        deleteProduct(deleteContainers[i], deleteId, deleteColor);
+    }
+}
+
+initListenersDeleteBtn();
+
+/***************************************/ /************************************** */ /************************************** */ /************************************** */
 
 // Products Quantity Changes
 function changeValue (quantityContainer, productId, productColor){
-    const quantityContainerValue = quantityContainer.value;
-    console.log(quantityContainer, productId, productColor);
     quantityContainer.addEventListener("change", e => {
         e.preventDefault();
-        /************************************** */
-
+        
         let productsSaveInLocalStorage = JSON.parse (localStorage.getItem('product')) || []; 
        
-        const productIndex = productsSaveInLocalStorage.find(p => p.selectedItemId === productId && p.itemColor === productColor);
-        
-        if (productIndex ==!-1) {
-            productsSaveInLocalStorage[productIndex] = quantityContainer.valueAsNumber;
-
-            localStorage.setItem("product", JSON.stringify(productsSaveInLocalStorage));
-
-        } else{
-            
-            localStorage.setItem("product", JSON.stringify(productsSaveInLocalStorage));
+        const productIndex = productsSaveInLocalStorage.findIndex(p => p.selectedItemId === productId && p.itemColor === productColor);
+        alert(productId);
+        alert(quantityContainer.valueAsNumber);
+        if (productIndex !==-1) {
+            if (quantityContainer.valueAsNumber === 0) {
+                 productsSaveInLocalStorage.splice(productIndex, 1);
+                localStorage.setItem("product", JSON.stringify(productsSaveInLocalStorage));
+                location.reload();
+            }
+            else{
+                productsSaveInLocalStorage[productIndex].itemQuantity = quantityContainer.valueAsNumber;
+                localStorage.setItem("product", JSON.stringify(productsSaveInLocalStorage));
+            }
         }
-
-        /*location.reload();*/
-        /*
-        1localstorage(recuprer)
-        2find le produit avec le productId et color 
-        3incrementer
-        4mettre la quantité dans l'élément (container.value)
-        location.reload();*/
     });
 }
 
@@ -162,33 +170,9 @@ function initListeners() {
         const productColor = cartItems[i].dataset.color;
         const quantityContainer = cartItems[i].querySelector(".itemQuantity");
         console.log(quantityContainer);
-        /*changeValue(quantityContainer, productId, productColor);*/
-        
-        quantityContainer.addEventListener("change", e => {
-            e.preventDefault();
-            /************************************** */
-            let productsSaveInLocalStorage = JSON.parse (localStorage.getItem('product')) || []; 
-           
-            const productIndex = productsSaveInLocalStorage.findIndex(p => p.selectedItemId === productId && p.itemColor === productColor);
-            alert(productId);
-            alert(quantityContainer.valueAsNumber);
-            if (productIndex !==-1) {
-                if (quantityContainer.valueAsNumber === 0) {
-                     productsSaveInLocalStorage.splice(productIndex, 1);
-                    localStorage.setItem("product", JSON.stringify(productsSaveInLocalStorage));
-                    location.reload();
-                }
-                else{
-                    productsSaveInLocalStorage[productIndex].itemQuantity = quantityContainer.valueAsNumber;
-                    localStorage.setItem("product", JSON.stringify(productsSaveInLocalStorage));
-                }
-            }
-    
-            
-            /*location.reload();*/
-        });
-    }
 
+        changeValue (quantityContainer, productId, productColor);
+    }
 }
 
 initListeners();
@@ -197,7 +181,7 @@ initListeners();
 function getGuestForm() {
     let form = document.querySelector(".cart__order__form");
     // Creation of new Reg Exp
-    let emailRegExp = new RegExp('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$');
+    let emailRegExp = new RegExp('^[a-zA-Z0-15.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$');
     let addressRegExp = new RegExp("^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+");
     let charRegExp = new RegExp("^[a-zA-Z ,.'-]+$");
 

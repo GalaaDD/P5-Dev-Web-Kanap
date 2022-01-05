@@ -1,11 +1,5 @@
 let productsSaveInLocalStorage = JSON.parse (localStorage.getItem('product'))|| [];
 
-/*
-function renderOrderNumber() {
-    document.querySelector("#orderId").innertext +=
-      localStorage.getItem("orderId");        
-}*/
-
 function renderOrderNumber(){
   const OrderNumberId = document.getElementById("orderId");
   OrderNumberId.innerText = localStorage.getItem("orderId");
