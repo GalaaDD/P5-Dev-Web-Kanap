@@ -1,14 +1,17 @@
 
+//functions and constant to establish product's ID information from the API
 const product = {};
 (async function() {
     const productId = getProductId();
     Object.assign(product, await getProduct(productId));
     renderProduct(product);
 })()
+
 function getProductId() {
     return new URL(location.href).searchParams.get("id");
 }
 
+//Function to fetch the API to get the Product's Id
 function getProduct(productId) {
     return fetch(`http://localhost:3000/api/products/${productId}`)
         .then(function (res) {
@@ -24,6 +27,7 @@ function getProduct(productId) {
         });  
 }
 
+// Function to dynamically integrate product's information with innerHTML
 function renderProduct(product) {
     document.querySelector("#page-product").innerHTML +=
         `<title>${product.name}</title>`;
@@ -58,7 +62,7 @@ function getItemInformations(product){
 //Function to add selected product to the local storage
 function alertConfirmation(item) {
     
-    if ( window.confirm(`${ item.itemName} ${item.itemColor} a été ajouté au panier cliquez sur OK pour acceder au panier ou sur ANNULER pour retourner à l'accueil`)){
+    if ( window.confirm(`${ item.itemName} ${item.itemColor} a été ajouté au panier cliquez sur OK pour confirmer et acceder au panier ou sur ANNULER pour annuler et retourner à l'accueil`)){
         checkStorage(item);
         window.location.href = "cart.html";
     }else{
@@ -70,6 +74,7 @@ function alertConfirmation(item) {
 function checkStorage(itemInformations){
     let productsSaveInLocalStorage = JSON.parse (localStorage.getItem('product')) || []; 
     console.log(productsSaveInLocalStorage);
+    // Incrementation using findIndex to determine if the productIndex has the same Id and the same color
     const productIndex = productsSaveInLocalStorage.findIndex(p => p.selectedItemId === itemInformations.selectedItemId && p.itemColor === itemInformations.itemColor);
     if (productIndex !== -1) {
         productsSaveInLocalStorage[productIndex].itemQuantity++;
@@ -79,13 +84,17 @@ function checkStorage(itemInformations){
         localStorage.setItem("product", JSON.stringify(productsSaveInLocalStorage));
     } 
 }
-
+// Listening the cart button to check quantity and send the selected product(s) to the cart page
 function addToCartBtn(){
     document.getElementById("addToCart").addEventListener("click", (event) => {
-    event.preventDefault();
-    const itemInformations = getItemInformations(product);
-    console.log(itemInformations);
-    alertConfirmation(itemInformations);
+        event.preventDefault();
+        const itemInformations = getItemInformations(product);
+        if (document.querySelector("#quantity").valueAsNumber !==0){
+            console.log(itemInformations);
+            alertConfirmation(itemInformations);
+        }else {
+            alert("Veuillez indiquer une quantitée comprise entre 1 et 100");
+        }
     });
 }
 

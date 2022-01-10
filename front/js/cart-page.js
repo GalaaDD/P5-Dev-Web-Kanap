@@ -1,6 +1,8 @@
 let productsSaveInLocalStorage = JSON.parse (localStorage.getItem('product'))|| [];
+//Establishing through the id  where we will integrate HTML elements
 const cartProducts = document.querySelector("#cart__items");
 
+//Function display the message for an empty cart
 function renderProductEmpty(cartProducts) {
     cartProducts.innerHTML += 
     `
@@ -10,7 +12,7 @@ function renderProductEmpty(cartProducts) {
     `;
 }
 
-//Function to render the product on the cart page
+//Function to integrate the products informations on the HTML cart page
 function renderProductFull(productsSaveInLocalStorage) {
     for(let i = 0; i < productsSaveInLocalStorage.length; i++){ 
         cartProducts.innerHTML +=
@@ -39,7 +41,8 @@ function renderProductFull(productsSaveInLocalStorage) {
         `;
     }
 }
-// Render of products
+
+// Function to indicate if the cart is empty
 function renderCarts(productsSaveInLocalStorage){
     //If the cart is empty : Display empty cart
     if(productsSaveInLocalStorage.length === 0){
@@ -52,17 +55,17 @@ function renderCarts(productsSaveInLocalStorage){
 
 renderCarts(productsSaveInLocalStorage);
 
-// Total Price
+// Function to get Total Price
 function getTotalPrice(){
-    //Getting cart's informations
-    let calculateTotalPrice = productsSaveInLocalStorage.map(p=>p.itemPrice*p.itemQuantity) || [0];
-   
-    //adding prices from the array to the reduce method
-    const reducerPrice = (accumulator, currentValue)=> accumulator + currentValue;
-    const totalPrice = calculateTotalPrice.reduce(reducerPrice);
-    return totalPrice;
+//Getting cart's informations
+let calculateTotalPrice = productsSaveInLocalStorage.map(p=>p.itemPrice*p.itemQuantity) || [0];
+
+//adding prices from the array to the reduce method
+const reducerPrice = (accumulator, currentValue)=> accumulator + currentValue;
+const totalPrice = calculateTotalPrice.reduce(reducerPrice);
+return totalPrice;
 }
-//Total Quantity
+//Function to get Total Quantity
 function getTotalQuantity(){
     //Getting cart's informations
     let calculateTotalQuantity = productsSaveInLocalStorage.map(p=>p.itemQuantity)|| [0];
@@ -72,8 +75,7 @@ function getTotalQuantity(){
     return totalQuantity;
 }
 
-//integration in HTML
-
+//Integration of the total final result in HTML
 function renderTotalCart(){
     const totalPrice = getTotalPrice();
     const quantityValue = getTotalQuantity();
@@ -84,7 +86,7 @@ function renderTotalCart(){
 
 renderTotalCart();
 
-// Delete a product
+// Function to Delete a product with the "supprimer" button
 /*function deleteProducthold() {
     // selection of the input containers' class
     let deleteBtn = document.querySelectorAll(".deleteItem");
@@ -106,7 +108,7 @@ renderTotalCart();
 deleteProducthold()
 */
 /************************************** */ /************************************** */ /************************************** */ /************************************** */
-
+// Function to Delete a product with the "supprimer" button
 function deleteProduct(deleteContainers, deleteId, deleteColor) {
     deleteContainers.addEventListener("click", e => {
         e.preventDefault();
@@ -123,7 +125,7 @@ function deleteProduct(deleteContainers, deleteId, deleteColor) {
         }
     });
 }
-
+//function to initiate delete button listeners'
 function initListenersDeleteBtn() {
     const deleteContainers = document.querySelectorAll(".deleteItem");
   
@@ -136,18 +138,17 @@ function initListenersDeleteBtn() {
 
 initListenersDeleteBtn();
 
-/***************************************/ /************************************** */ /************************************** */ /************************************** */
 
-// Products Quantity Changes
+
+// Function to Change Products' Quantity 
 function changeValue (quantityContainer, productId, productColor){
     quantityContainer.addEventListener("change", e => {
         e.preventDefault();
-        
+
         let productsSaveInLocalStorage = JSON.parse (localStorage.getItem('product')) || []; 
        
         const productIndex = productsSaveInLocalStorage.findIndex(p => p.selectedItemId === productId && p.itemColor === productColor);
-        alert(productId);
-        alert(quantityContainer.valueAsNumber);
+
         if (productIndex !==-1) {
             if (quantityContainer.valueAsNumber === 0) {
                  productsSaveInLocalStorage.splice(productIndex, 1);
@@ -177,15 +178,86 @@ function initListeners() {
 
 initListeners();
 
-// regex form function
+// Creation of new Reg Exp
+let emailRegExp = new RegExp('^[a-zA-Z0-15.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$');
+let addressRegExp = new RegExp("^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+");
+let charRegExp = new RegExp("^[a-zA-Z ,.'-]+$");
+
+ //Form validation functions
+const validFirstName = function(inputFirstName) {
+    let firstNameErrorMessage = inputFirstName.nextElementSibling;
+
+    if (charRegExp.test(inputFirstName.value)) {
+        firstNameErrorMessage.innerHTML = '';
+        return true;
+    } else {
+        firstNameErrorMessage.innerHTML = 'Veuillez renseigner votre prénom.';
+    }
+};
+
+const validLastName = function(inputLastName) {
+    let lastNameErrorMessage = inputLastName.nextElementSibling;
+
+    if (charRegExp.test(inputLastName.value)) {
+        lastNameErrorMessage.innerHTML = '';
+        return true;
+    } else {
+        lastNameErrorMessage.innerHTML = 'Veuillez renseigner votre nom de famille.';
+    }
+};
+
+const validAddress = function(inputAddress) {
+    let addressErrorMessage = inputAddress.nextElementSibling;
+
+    if (addressRegExp.test(inputAddress.value)) {
+        addressErrorMessage.innerHTML = '';
+        return true; 
+    } else {
+        addressErrorMessage.innerHTML = 'Veuillez renseigner votre adresse postale.';
+    }
+};
+
+const validCity = function(inputCity) {
+    let cityErrorMessage = inputCity.nextElementSibling;
+
+    if (charRegExp.test(inputCity.value)) {
+        cityErrorMessage.innerHTML = '';
+        return true;
+    } else {
+        cityErrorMessage.innerHTML = 'Veuillez renseigner le nom de votre ville.';
+    }
+};
+
+const validEmail = function(inputEmail) {
+    let emailErrorMessage = inputEmail.nextElementSibling;
+    if (emailRegExp.test(inputEmail.value)) {
+        emailErrorMessage.innerHTML = '';
+        return true;
+    } else {
+        emailErrorMessage.innerHTML = 'Veuillez renseigner votre adresse email.';
+    }
+};
+
+// Function to control the validity of the input's information
+function controlForm(form) {
+    if (
+        validFirstName(form.firstName) &&
+        validLastName(form.lastName) &&
+        validAddress(form.address) &&
+        validCity(form.city) &&
+        validEmail(form.email)
+    ){
+        return true;
+    } else {
+        alert("Formulaire incomplet ou incorrect, merci de vérifier vos informations");
+        return false;
+    }
+}
+
+// Function containing addEventListeners surrounding validation functions (firstname, lastname, address, city, email)
 function getGuestForm() {
     let form = document.querySelector(".cart__order__form");
-    // Creation of new Reg Exp
-    let emailRegExp = new RegExp('^[a-zA-Z0-15.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$');
-    let addressRegExp = new RegExp("^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+");
-    let charRegExp = new RegExp("^[a-zA-Z ,.'-]+$");
 
- // addEventListeners surrounding validation functions (firstname, lastname, address, city, email)
     form.firstName.addEventListener('change', function() {
         validFirstName(this);
 
@@ -208,74 +280,20 @@ function getGuestForm() {
         validEmail(this);
     });
 
-    //declaration of validation functions
-    const validFirstName = function(inputFirstName) {
-        let firstNameErrorMessage = inputFirstName.nextElementSibling;
-
-        if (charRegExp.test(inputFirstName.value)) {
-            firstNameErrorMessage.innerHTML = '';
-            return /*true*/;
-        } else {
-            firstNameErrorMessage.innerHTML = 'Veuillez renseigner votre prénom.';
-        return /*false*/;
-        }
-    };
-
-    const validLastName = function(inputLastName) {
-        let lastNameErrorMessage = inputLastName.nextElementSibling;
-
-        if (charRegExp.test(inputLastName.value)) {
-            lastNameErrorMessage.innerHTML = '';
-            return /*true*/;
-        } else {
-            lastNameErrorMessage.innerHTML = 'Veuillez renseigner votre nom de famille.';
-        return /*false*/;
-        }
-    };
-
-    const validAddress = function(inputAddress) {
-        let addressErrorMessage = inputAddress.nextElementSibling;
-
-        if (addressRegExp.test(inputAddress.value)) {
-            addressErrorMessage.innerHTML = '';
-            return /*true*/; 
-        } else {
-            addressErrorMessage.innerHTML = 'Veuillez renseigner votre adresse postale.';
-        return /*false*/;
-        }
-    };
-
-    const validCity = function(inputCity) {
-        let cityErrorMessage = inputCity.nextElementSibling;
-
-        if (charRegExp.test(inputCity.value)) {
-            cityErrorMessage.innerHTML = '';
-            return /*true*/;
-        } else {
-            cityErrorMessage.innerHTML = 'Veuillez renseigner le nom de la ville.';
-        return /*false*/;
-        }
-    };
-
-    const validEmail = function(inputEmail) {
-        let emailErrorMessage = inputEmail.nextElementSibling;
-
-        if (emailRegExp.test(inputEmail.value)) {
-            emailErrorMessage.innerHTML = '';
-            return /*true*/;
-        } else {
-            emailErrorMessage.innerHTML = 'Veuillez renseigner votre adresse email.';
-        return /*false*/;
-        }
-    };
 }
+
 getGuestForm();
+
+
+
 //Function to Send Guests'information to the localstorage
 function postFormToTheLocalStorage(){
     const orderBtn = document.getElementById("order");
+    let form = document.querySelector(".cart__order__form");
     //cart Listener 
     orderBtn.addEventListener("click", (event) => {
-    
+        if (!controlForm(form)) return;
+        
         //Getting Guest informations
         let inputName = document.getElementById('firstName');
         let inputLastName = document.getElementById('lastName');
@@ -305,13 +323,14 @@ function postFormToTheLocalStorage(){
                 "Content-Type": "application/json" 
             },
         };
+
         // Fetch the local storage to send informations
         fetch("http://localhost:3000/api/products/order", postOrder)
         .then((response) => response.json())
         .then((data) => {
             localStorage.clear();
             localStorage.setItem("orderId", data.orderId);
-            
+
             document.location.href = "confirmation.html";
             
         })
@@ -323,6 +342,3 @@ function postFormToTheLocalStorage(){
 }
 
 postFormToTheLocalStorage();
-/*if (validFirstName(inputFirstName) && validLastName() && validAddress() && validCity() && validEmail() === true){
-postFormToTheLocalStorage();
-}*/
