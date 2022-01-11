@@ -1,14 +1,17 @@
 /**Get-API-products-Informations */
 
 function getProducts() {
+    // call the fetch method
    return fetch("http://localhost:3000/api/products")
+        // Promise, to format 
         .then(function (res) {
             return res.json();
         })
+        // Promise, return the data to use
         .then(function (products) {
             return products;
           })
-          
+          // Rejection of the request
         .catch((error) => { 
             let items = document.querySelector(".items");
             items.innerHTML = 

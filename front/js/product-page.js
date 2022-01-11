@@ -13,13 +13,17 @@ function getProductId() {
 
 //Function to fetch the API to get the Product's Id
 function getProduct(productId) {
+    // call the fetch method with the variable
     return fetch(`http://localhost:3000/api/products/${productId}`)
+        // Promise, to format 
         .then(function (res) {
             return res.json();
         })
+        // Promise, to return the data to use
         .then(function (products) {
             return products;
         })
+        // Rejection of the request
         .catch(() => { 
             let items = document.querySelector(".items");
             items.innerHTML = 
@@ -89,7 +93,7 @@ function addToCartBtn(){
     document.getElementById("addToCart").addEventListener("click", (event) => {
         event.preventDefault();
         const itemInformations = getItemInformations(product);
-        if (document.querySelector("#quantity").valueAsNumber !==0){
+        if (document.querySelector("#quantity").valueAsNumber !==0 ) {
             console.log(itemInformations);
             alertConfirmation(itemInformations);
         }else {
