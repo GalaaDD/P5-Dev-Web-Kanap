@@ -1,12 +1,12 @@
 
-//functions and constant to establish product's ID information from the API
+//functions and constant to establish product's ID and insert it to the URL
 const product = {};
 (async function() {
     const productId = getProductId();
     Object.assign(product, await getProduct(productId));
     renderProduct(product);
 })()
-
+//Function containing searchParams
 function getProductId() {
     return new URL(location.href).searchParams.get("id");
 }

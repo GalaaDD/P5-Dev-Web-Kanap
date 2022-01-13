@@ -179,13 +179,161 @@ function initListeners() {
 
 initListeners();
 
+
+// Function to summary and send the information of the Order to the Local Storage
+function postFormToTheLocalStorage() {
+    const order = document.getElementById('order');
+    order.addEventListener('click', (e) => {
+    e.preventDefault();
+  
+    /*******Form validation functions******/
+    
+    //Function to check the validity of the input
+       //FirstName Validation
+    function checkFirstName() {
+      const validFirstName = contact.firstName;
+      if (/^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{3,20}$/.test(validFirstName)) {
+        return true;
+      } else {
+        const firstNameErrorMsg = document.getElementById('firstNameErrorMsg');
+        firstNameErrorMsg.innerText = 'Veuillez renseigner votre prénom.';
+      }
+    } 
+  
+
+    //LastName validation
+    function checkName() {
+      const validName = contact.lastName;
+      if (/^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{3,20}$/.test(validName)) {
+        return true;
+      } else {
+        const lastNameErrorMsg = document.getElementById('lastNameErrorMsg');
+        lastNameErrorMsg.innerText = 'Veuillez renseigner votre nom de famille.';
+      }
+    }
+
+    //Mail Adress validation
+    function checkMailAddress() {
+      const validAddress = contact.address;
+      if (/^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+/.test(validAddress)) {
+        return true;
+      } else {
+        const addressErrorMsg = document.getElementById('addressErrorMsg');
+        addressErrorMsg.innerText = 'Veuillez renseigner votre adresse postale.';
+      }
+    } 
+  
+    //City validation
+    function checkCity() {
+      const validAddress = contact.city;
+      if (/^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{3,10}$/.test(validAddress)) {
+        return true;
+      } else {
+        const cityErrorMsg = document.getElementById('cityErrorMsg');
+        cityErrorMsg.innerText = 'Veuillez renseigner le nom de votre ville.';
+      }
+    }
+
+    //Email validation
+    function checkEmail() {
+      const validEmail = contact.email;
+      if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(validEmail)) {
+        return true;
+      } else {
+        const emailErrorMsg = document.getElementById('emailErrorMsg');
+        emailErrorMsg.innerText = 'Veuillez renseigner une adresse email valide.';
+      }
+    }
+    
+    
+    // Constant to Summary guest's information into an object
+    const contact = {
+        firstName : document.getElementById('firstName').value,
+        lastName : document.getElementById('lastName').value,
+        address : document.getElementById('address').value,
+        city : document.getElementById('city').value,
+        email : document.getElementById('email').value
+    }
+
+    const selectedItemsId = productsSaveInLocalStorage.map(p => p.selectedItemId);
+    const products = selectedItemsId;
+
+    // Function to validate form 
+    function validCheck() {
+      if (checkFirstName() && checkName() && checkMailAddress() && checkCity() && checkEmail()) {
+        localStorage.setItem('contact', JSON.stringify(contact));
+        return true;
+      } else {
+          alert("Formulaire incomplet ou incorrect, merci de vérifier vos informations")
+        }
+    }
+    if (validCheck()!== true) return false;
+    
+    // Constant to Summary guest's information and guest's products into an object
+    const orderSummary = {
+      contact,
+      products,
+    }
+
+    /*******Post method******/
+  // Sending the object OrderSummary to the Local Storage
+    const postOrder = {
+        method: 'POST',
+        body: JSON.stringify(orderSummary),
+        headers: {
+            "Content-Type": "application/json" 
+        },
+    };
+  
+    // Fetch the local storage to send informations
+    fetch("http://localhost:3000/api/products/order", postOrder)
+    .then((response) => response.json())
+    .then((data) => {
+        localStorage.clear();
+
+        window.location.href = 'confirmation.html?orderId='+data.orderId;
+        
+    })
+    .catch((err) => {
+        alert ("Un problème est survenu: " + err.message);
+    });
+});   
+}
+   
+postFormToTheLocalStorage();
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ANCIENNE PARTIE
 // Creation of new Reg Exp for validations
-let emailRegExp = new RegExp('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$');
+let emailRegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 //let addressRegExp = new RegExp("^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+");
 let charRegExp = new RegExp("^[a-zA-Z ,.'-]+$");
 
  /*******Form validation functions******/
-
+/*
  //FirstName Validation
 const validFirstName = function(inputFirstName) {
     let firstNameErrorMessage = inputFirstName.nextElementSibling;
@@ -277,12 +425,10 @@ function getGuestForm() {
    
     form.lastName.addEventListener('change', function() {
         validLastName(this);
-
     });
 
     form.address.addEventListener('change', function() {
         validAddress(this);
-        console.log(this.value);
     });
 
     form.city.addEventListener('change', function() {
@@ -296,27 +442,26 @@ function getGuestForm() {
 }
 
 getGuestForm();
+*/
 
 
 
+/******************************************************** ANCIENNE PARTIE**************************************************
 //Function to Send Guests'information to the localstorage
-function postFormToTheLocalStorage(){
+async function postFormToTheLocalStorage(){
     const orderBtn = document.getElementById("order");
     let form = document.querySelector(".cart__order__form");
     //cart Listener 
     orderBtn.addEventListener("click", (event) => {
         if (controlForm(form)!== true) return false;
         //Getting Guest informations
-        let inputName = document.getElementById('firstName');
-        let inputLastName = document.getElementById('lastName');
-        let inputAdress = document.getElementById('address');
-        let inputCity = document.getElementById('city');
-        let inputMail = document.getElementById('email');
+        const inputName = document.getElementById('firstName');
+        const inputLastName = document.getElementById('lastName');
+        const inputAdress = document.getElementById('address');
+        const inputCity = document.getElementById('city');
+        const inputMail = document.getElementById('email');
 
-        let selectedItemsId = [];
-        for (let i = 0; i < productsSaveInLocalStorage.length;i++) {
-            selectedItemsId.push(productsSaveInLocalStorage[i].selectedItemId);
-        }
+        const selectedItemsId = productsSaveInLocalStorage.map(p => p.selectedItemId);
 
         const orderSummary = { contact : {
             firstName: inputName.value,
@@ -330,7 +475,7 @@ function postFormToTheLocalStorage(){
 
         const postOrder = {
             method: 'POST',
-            body: orderSummary,
+            body: JSON.stringify(orderSummary),
             headers: {
                 "Content-Type": "application/json" 
             },
@@ -340,12 +485,11 @@ function postFormToTheLocalStorage(){
         fetch("http://localhost:3000/api/products/order", postOrder)
         .then((response) => response.json())
         .then((data) => {
-            /*localStorage.clear();*/
+            localStorage.clear();
 
-            document.location.href = "confirmation.html?orderId="+data.orderId;
+            window.location.href = 'confirmation.html?orderId='+data.orderId;
             
         })
-
         .catch((err) => {
             alert ("Un problème est survenu: " + err.message);
         });
@@ -353,3 +497,5 @@ function postFormToTheLocalStorage(){
 }
 
 postFormToTheLocalStorage();
+
+*/
