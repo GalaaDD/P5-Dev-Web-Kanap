@@ -17,6 +17,7 @@ function getProducts() {
             "Une erreur est survenue, veuillez vérifier le port du serveur local <br> Si le problème persiste veuillez nous en informer.";
         });
 }
+
 // Function to dynamically integrate product information in HTML with innerHTML
 function renderProduct(product) {
     document.querySelector("#items").innerHTML +=

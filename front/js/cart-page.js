@@ -2,6 +2,7 @@ let productsSaveInLocalStorage = JSON.parse (localStorage.getItem('product'))|| 
 //Establishing through the id  where we will integrate HTML elements
 const cartProducts = document.querySelector("#cart__items");
 
+                                /************Functions to insert products information to HTML************/
 //Function display the message for an empty cart
 function renderProductEmpty(cartProducts) {
     cartProducts.innerHTML += 
@@ -55,6 +56,7 @@ function renderCarts(productsSaveInLocalStorage){
 
 renderCarts(productsSaveInLocalStorage);
 
+                                /******Total Functions******/
 // Function to get Total Price
 function getTotalPrice(){
     //Getting cart's informations
@@ -86,29 +88,7 @@ function renderTotalCart(){
 }
 
 renderTotalCart();
-
-// Function to Delete a product with the "supprimer" button
-/*function deleteProducthold() {
-    // selection of the input containers' class
-    let deleteBtn = document.querySelectorAll(".deleteItem");
-    
-    for (let i = 0; i < deleteBtn.length; i++){
-        deleteBtn[i].addEventListener("click" , (event) => {
-            event.preventDefault();
-            //Select the element to delete, (id, color)
-            let deleteId = productsSaveInLocalStorage[i].selectedItemId;
-            let deleteColor = productsSaveInLocalStorage[i].itemColor;
-            productsSaveInLocalStorage = productsSaveInLocalStorage.filter( el => el.selectedItemId !== deleteId || el.itemColor !== deleteColor );
-            localStorage.setItem("product", JSON.stringify(productsSaveInLocalStorage));
-            //Alert deleted product
-            alert("Le produit a été supprimé du panier");
-            location.reload();
-        });
-    }
-}
-deleteProducthold()
-*/
-/************************************** */ /************************************** */ /************************************** */ /************************************** */
+                                    /************Functions to edit Quantity input************/
 // Function to Delete a product with the "supprimer" button
 function deleteProduct(deleteContainers, deleteId, deleteColor) {
     deleteContainers.addEventListener("click", e => {
@@ -179,7 +159,7 @@ function initListeners() {
 
 initListeners();
 
-/**************************************************Form Validation Functions ******************************************/
+/**************************************************Form Validation Functions*************************************************/
 //Function to check FirstName input
 function checkFirstName(contact) {
     const validFirstName = contact.firstName;
@@ -255,7 +235,7 @@ function validCheck(contact) {
         alert("Formulaire incomplet ou incorrect, merci de vérifier vos informations");
     }
 }
-
+                    /**************************POSTFORM**************************/
 // Function to summary and send the information of the Order to the Local Storage
 function postForm() {
     const order = document.getElementById('order');

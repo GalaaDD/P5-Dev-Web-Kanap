@@ -1,3 +1,4 @@
+                /************API request************/
 
 //Functions and constant to establish product's ID and insert it to the URL
 const product = {};
@@ -32,6 +33,8 @@ function getProduct(productId) {
         });  
 }
 
+                                    /************Functions to insert products information to HTML************/
+
 // Function to dynamically integrate product's information with innerHTML
 function renderProduct(product) {
     document.querySelector("#page-product").innerHTML +=
@@ -45,6 +48,8 @@ function renderProduct(product) {
         `<p id="description">${product.description}</p>`;
     document.querySelector("#colors").insertAdjacentHTML("beforeend", product.colors.map((colors => `<option value="${colors}">${colors}</option>`))); 
 }
+
+                    /************Add to cart functions************/
 
 //Get cutstomer's choice-Quantity-informations'
 function getItemInformations(product){
