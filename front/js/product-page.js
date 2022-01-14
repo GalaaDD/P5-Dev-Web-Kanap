@@ -1,11 +1,12 @@
 
-//functions and constant to establish product's ID and insert it to the URL
+//Functions and constant to establish product's ID and insert it to the URL
 const product = {};
 (async function() {
     const productId = getProductId();
     Object.assign(product, await getProduct(productId));
     renderProduct(product);
 })()
+
 //Function containing searchParams
 function getProductId() {
     return new URL(location.href).searchParams.get("id");
@@ -45,7 +46,6 @@ function renderProduct(product) {
     document.querySelector("#colors").insertAdjacentHTML("beforeend", product.colors.map((colors => `<option value="${colors}">${colors}</option>`))); 
 }
 
-/**local-storage */
 //Get cutstomer's choice-Quantity-informations'
 function getItemInformations(product){
     /**cutstomer's choice-Quantity /colors*/
@@ -65,7 +65,6 @@ function getItemInformations(product){
 
 //Function to add selected product to the local storage
 function alertConfirmation(item) {
-    
     if ( window.confirm(`${ item.itemName} ${item.itemColor} a été ajouté au panier cliquez sur OK pour confirmer et acceder au panier ou sur ANNULER pour annuler et retourner à l'accueil`)){
         checkStorage(item);
         window.location.href = "cart.html";
@@ -74,10 +73,9 @@ function alertConfirmation(item) {
     }
 }
 
-// storage check
+// Function to declare local Storage and use of findIndex to increment or decrement quantity
 function checkStorage(itemInformations){
     let productsSaveInLocalStorage = JSON.parse (localStorage.getItem('product')) || []; 
-    console.log(productsSaveInLocalStorage);
     // Incrementation using findIndex to determine if the productIndex has the same Id and the same color
     const productIndex = productsSaveInLocalStorage.findIndex(p => p.selectedItemId === itemInformations.selectedItemId && p.itemColor === itemInformations.itemColor);
     if (productIndex !== -1) {
@@ -88,13 +86,13 @@ function checkStorage(itemInformations){
         localStorage.setItem("product", JSON.stringify(productsSaveInLocalStorage));
     } 
 }
+
 // Listening the cart button to check quantity and send the selected product(s) to the cart page
 function addToCartBtn(){
     document.getElementById("addToCart").addEventListener("click", (event) => {
         event.preventDefault();
         const itemInformations = getItemInformations(product);
         if (document.querySelector("#quantity").valueAsNumber !==0 ) {
-            console.log(itemInformations);
             alertConfirmation(itemInformations);
         }else {
             alert("Veuillez indiquer une quantitée comprise entre 1 et 100");
