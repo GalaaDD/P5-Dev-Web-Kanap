@@ -164,6 +164,7 @@ initListeners();
 function checkFirstName(contact) {
     const validFirstName = contact.firstName;
     if (/^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{3,20}$/.test(validFirstName)) {
+        firstNameErrorMsg.innerText = '';
         return true;
     } else {
         const firstNameErrorMsg = document.getElementById('firstNameErrorMsg');
@@ -175,6 +176,7 @@ function checkFirstName(contact) {
 function checkLastName(contact) {
     const validName = contact.lastName;
     if (/^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{3,20}$/.test(validName)) {
+        lastNameErrorMsg.innerText = '';
         return true;
     } else {
         const lastNameErrorMsg = document.getElementById('lastNameErrorMsg');
@@ -186,6 +188,7 @@ function checkLastName(contact) {
 function checkMailAddress(contact) {
     const validAddress = contact.address;
     if (/^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+/.test(validAddress)) {
+        addressErrorMsg.innerText = '';
         return true;
     } else {
         const addressErrorMsg = document.getElementById('addressErrorMsg');
@@ -197,6 +200,7 @@ function checkMailAddress(contact) {
 function checkCity(contact) {
     const validAddress = contact.city;
     if (/^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{3,10}$/.test(validAddress)) {
+        cityErrorMsg.innerText = '';
         return true;
     } else {
         const cityErrorMsg = document.getElementById('cityErrorMsg');
@@ -208,6 +212,7 @@ function checkCity(contact) {
 function checkEmail(contact) {
     const validEmail = contact.email;
     if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(validEmail)) {
+        emailErrorMsg.innerText = '';
         return true;
     } else {
         const emailErrorMsg = document.getElementById('emailErrorMsg');

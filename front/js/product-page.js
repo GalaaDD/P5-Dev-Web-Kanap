@@ -5,7 +5,12 @@ const product = {};
 (async function() {
     const productId = getProductId();
     Object.assign(product, await getProduct(productId));
-    renderProduct(product);
+    if(Object.keys(product).length !== 0){
+        renderProduct(product);
+    }else{
+        document.querySelector(".item").innerHTML= "Une erreur s'est produite au niveau du serveur, Veuillez retourner à l'accueil et essayer à nouveau.";
+    }
+    
 })()
 
 //Function containing searchParams
@@ -27,7 +32,7 @@ function getProduct(productId) {
         })
         // Rejection of the request
         .catch(() => { 
-            let items = document.querySelector(".items");
+            let items = document.querySelector(".item");
             items.innerHTML = 
             "Une erreur est survenue, veuillez vérifier le port du serveur local <br> Si le problème persiste veuillez nous en informer.";
         });  
